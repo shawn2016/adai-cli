@@ -1,0 +1,40 @@
+{
+  "name": "adai-cli",
+  "version": "1.0.2",
+  "description": "react,vue 脚手架",
+  "main": "index.js",
+  "bin": {
+    "adai": "bin/adai.js"
+  },
+  "dependencies": {
+    "chalk": "^2.3.1",
+    "colorful": "^2.1.0",
+    "commander": "^2.14.1",
+    "cross-spawn": "^2.2.3",
+    "download-git-repo": "^1.0.2",
+    "inquirer": "^5.1.0",
+    "log4js": "^2.5.3",
+    "metalsmith": "^2.3.0",
+    "ora": "^2.0.0",
+    "prompt-list": "^3.1.2",
+    "user-home": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shawn2016/adai-cli.git"
+  },
+  "keywords": [
+    "react",
+    "vue"
+  ],
+  "author": "shawn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shawn2016/adai-cli/issues"
+  },
+  "homepage": "https://github.com/shawn2016/adai-cli#readme"
+}
