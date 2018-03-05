@@ -43,44 +43,23 @@ var enquirer = new List({
     ]
 });
 
+// 所有模板
+/**
+ * vue-webpack
+ * vue-router-webpack
+ * vue-router-eslint-webpack
+ * vue-eslint-webpack
+ * react-router-webpack
+ * react-router-webpack
+ * react+router+redux+eslint+parcel
+ */
 enquirer.run().then(function (answers) {
     console.log(chalk.green('Use Template ' + answers));
-    var projectName = '';
-    var projectRouter = '';
-    var projectESLint = '';
+    // 获取所有问题
+    var answersArray = getAnswersArray(answers);
     // 修改项目名字
-    inquirer.prompt([
-        {
-            type: 'Input',
-            name: 'projectName',
-            message: 'Project name?',
-            default: answers,
-        }, {
-            type: 'confirm',
-            name: 'projectRouter',
-            message: 'Install vue-router?',
-            default: true
-        },
-        {
-            type: 'confirm',
-            name: 'projectESLint',
-            message: 'Use ESLint to lint your code?',
-            default: true
-        }
-    ]).then((answersValue) => {
-        var answersTitle = answers
-        projectName = answersValue.projectName;
-        projectRouter = answersValue.projectRouter;
-        projectESLint = answersValue.projectESLint;
-        if (projectRouter && projectESLint) {
-            answersTitle = `${projectName}-router-eslint`
-        } else if (projectRouter == 'true' && projectESLint == 'false') {
-            answersTitle = `${projectName}-router`
-        } else if (!projectRouter == 'false' && projectESLint == 'true') {
-            answersTitle = `${projectName}-eslint`
-        } else if (!projectRouter == 'false' && !projectESLint == 'false') {
-            answersTitle = `${projectName}`
-        }
+    inquirer.prompt(answersArray).then((answersValue) => {
+        var answersTitle = getAnswersTitle(answers, answersValue);
         console.log(chalk.green(`download template ${answersTitle}...`))
         // download template
         var tmplType = answersTitle.toLowerCase();
@@ -97,7 +76,11 @@ enquirer.run().then(function (answers) {
                 spinner.stop()
                 if (err) console.log(chalk.red('Failed to download repo ' + template + ': ' + err.message.trim()))
                 generate(name, tmplType, tmp, to, function (err) {
-                    if (err) console.log(chalk.red(err))
+                    if (err) {
+                        console.log(chalk.red('没有找你想要的项目模板！'))
+                        console.log(chalk.red(err))
+                        return false;
+                    }
                     console.log(chalk.green('Project generation success.', name));
                     console.log(chalk.green('===================================='));
                     console.log(chalk.green('  cd', name));
@@ -113,5 +96,81 @@ enquirer.run().then(function (answers) {
     .catch(function (err) {
         console.log(err);
     });
-
-
+// 获取最终项目名称
+function getAnswersTitle(answers, answersValue) {
+    var titleName = answers + ''
+    for (var i in answersValue) {
+        if (i !== 'projectName') {
+            var desc = ''
+            if (typeof answersValue[i] === 'boolean' && answersValue[i]) {
+                desc = i.substring(7).toLocaleLowerCase();
+                if (desc === 'statemanage' && answers === 'react') {
+                    desc = 'redux'
+                }
+                if (desc === 'statemanage' && answers === 'vue') {
+                    desc = 'vuex'
+                }
+            } else if (typeof answersValue[i] === 'string') {
+                desc = answersValue[i]
+            }
+            if (desc) {
+                titleName += '-' + desc
+            }
+        }
+    }
+    return titleName;
+}
+// 获取所有问题
+// react+router+redux+eslint+webpack
+function getAnswersArray(answers) {
+    console.log(program.args)
+    // 项目名字
+    var answersArray = [{
+        type: 'Input',
+        name: 'projectName',
+        message: 'Project name?',
+        default: program.args[0],
+    }];
+    // react 模板
+    if (answers === 'react') {
+        answersArray.push({
+            type: 'confirm',
+            name: 'projectRouter',
+            message: 'Install react-router?',
+            default: true
+        }, {
+                type: 'confirm',
+                name: 'projectStateManage',
+                message: 'Install redux?',
+                default: true
+            })
+    }
+    // vue 模板
+    if (answers === 'vue') {
+        answersArray.push({
+            type: 'confirm',
+            name: 'projectRouter',
+            message: 'Install vue-router?',
+            default: true
+        }, {
+                type: 'confirm',
+                name: 'projectStateManage',
+                message: 'Install vuex?',
+                default: true
+            })
+    }
+    // eslint 
+    answersArray.push({
+        type: 'confirm',
+        name: 'projectEslint',
+        message: 'Use ESLint to lint your code?',
+        default: true
+    }, {
+            type: 'list',
+            message: 'which build method do you need:',
+            name: 'projectBuild',
+            choices: ['webpack', 'parcel', 'gulp']
+        });
+    console.log(answersArray)
+    return answersArray
+}

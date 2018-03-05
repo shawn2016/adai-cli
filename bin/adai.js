@@ -38,13 +38,35 @@ if (!subcmd || subcmd === 'help') {
 }
 
 function list() {
+  var projectList = [{
+    name: 'vue-webpack',
+    desc: '一个最简易的vue项目'
+  }, {
+    name: 'vue-eslint-webpack',
+    desc: '一个简易的vue项目,含有eslint规范'
+  },{
+    name: 'vue-router-webpack',
+    desc: '一个简易的vue项目,含有vue-router'
+  }, {
+    name: 'vue-router-eslint-webpack',
+    desc: '一个简易的vue项目,含有vue-router,eslint规范'
+  },{
+    name: 'react-router-webpack',
+    desc: '一个简易的react项目,含有react-router'
+  },{
+    name: 'react-router-redux-eslint-webpack',
+    desc: '这是一个React脚手架，没有使用create-react-app标准的React+Redux分层结构,由webpack4构建'
+  },{
+    name: 'react-router-redux-eslint-parcel',
+    desc: '这是一个React脚手架，没有使用create-react-app标准的React+Redux分层结构,由parcel构建'
+  }]
   console.log()
   console.log('Available official templates:')
-  console.log(' ★  vue - 一个vue简易项目')
-  console.log(' ★  vue-router - 一个vue+router项目')
-  console.log(' ★  vue-eslint - 一个vue+eslint项目')
-  console.log(' ★  vue-router-eslint - 一个vue+router+eslint项目')
-  console.log(' ★  react-router - 一个react+router项目')
+  console.log()
+  for (let index = 0; index < projectList.length; index++) {
+    const element = projectList[index];
+    console.log(chalk.green(` ★  ${element.name} - ${element.desc}`))
+  }
   console.log()
 }
 function printHelp() {
@@ -68,7 +90,6 @@ function execTask(cmd) {
     spawn(file, args, {
       stdio: 'inherit'
     }).on('close', (code) => {
-      console.log(chalk.red(`adai exit with code ${code}`));
       process.exit(code);
     });
   })
